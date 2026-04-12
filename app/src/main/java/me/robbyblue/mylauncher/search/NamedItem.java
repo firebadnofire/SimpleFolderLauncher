@@ -1,5 +1,7 @@
 package me.robbyblue.mylauncher.search;
 
+import java.text.Normalizer;
+
 import me.robbyblue.mylauncher.files.FileNode;
 
 public class NamedItem {
@@ -20,8 +22,8 @@ public class NamedItem {
         return fileNode;
     }
 
-    public void normalizeUmlaute() {
-        this.name = name.replace("ä", "a").replace("ö", "o")
-                .replace("ü", "u");
+    public void normalizeAccents() {
+        this.name = Normalizer.normalize(name, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
     }
 }

@@ -21,6 +21,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 import me.robbyblue.mylauncher.AppsListCache;
@@ -52,11 +53,11 @@ public class SearchActivity extends Activity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean autoOpenOnlyResult = prefs.getBoolean("pref_search_auto_open_only", false);
         boolean showShortcuts = prefs.getBoolean("pref_search_show_shortcuts", true);
-        boolean normalizeUmlaute = prefs.getBoolean("pref_search_normalize_umlaute", true);
+        boolean normalizeAccents = prefs.getBoolean("pref_search_normalize_umlaute", true);
 
         int appTextColor = prefs.getInt("pref_app_text_color", Color.parseColor("#EEEEEE"));
 
-        searchableItems = indexSearchableItems(showShortcuts, normalizeUmlaute);
+        searchableItems = indexSearchableItems(showShortcuts, normalizeAccents);
 
         recycler = findViewById(R.id.app_recycler);
 
@@ -109,9 +110,9 @@ public class SearchActivity extends Activity {
                 if (query.contains(".")) {
                     searchResults = search.searchDots(query);
                 } else {
-                    if(normalizeUmlaute){
-                        query = query.replace("ä", "a").replace("ö", "o")
-                                .replace("ü", "u");
+                    if(normalizeAccents){
+                        query = Normalizer.normalize(query, Normalizer.Form.NFD)
+                                .replaceAll("\\p{M}", "");
                     }
 
                     searchResults = search.searchFiles(query, searchableItems);
@@ -165,7 +166,7 @@ public class SearchActivity extends Activity {
         return gestureDetector.onTouchEvent(event);
     }
 
-    private ArrayList<NamedItem> indexSearchableItems(boolean showShortcuts, boolean normalizeUmlaute) {
+    private ArrayList<NamedItem> indexSearchableItems(boolean showShortcuts, boolean normalizeAccents) {
         // add apps by their actual names
         ArrayList<NamedItem> items = new ArrayList<>();
 
@@ -212,9 +213,9 @@ public class SearchActivity extends Activity {
             }
         }
 
-        if(normalizeUmlaute) {
+        if(normalizeAccents) {
             for (NamedItem item : items) {
-                item.normalizeUmlaute();
+                item.normalizeAccents();
             }
         }
         return items;

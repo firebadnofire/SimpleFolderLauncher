@@ -86,9 +86,9 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pref_search_normalize_umlaute"
-            android:summaryOff="won't normalize umlaute"
-            android:summaryOn="will normalize umlaute"
-            android:title="normalize umlaute"
+            android:summaryOff="won't normalize accents"
+            android:summaryOn="will normalize accents"
+            android:title="normalize accents"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

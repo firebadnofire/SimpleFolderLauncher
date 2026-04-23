@@ -18,17 +18,12 @@ import me.robbyblue.mylauncher.R;
 
 public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
-    public interface OnItemMoveListener {
-        void onItemMoved(int from, int to);
-    }
-
     public interface OnItemClickListener {
         void onItemClicked(FileNode file);
         void onItemLongClicked(int position);
     }
 
     ArrayList<FileNode> files;
-    OnItemMoveListener itemMoveListener;
     OnItemClickListener itemClickListener;
     String textAlignment = null;
     int appTextColor;
@@ -37,10 +32,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
     public FileAdapter(ArrayList<FileNode> files) {
         this.files = files;
-    }
-
-    public void setOnItemMoveListener(OnItemMoveListener itemMoveListener) {
-        this.itemMoveListener = itemMoveListener;
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
@@ -130,9 +121,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         files.remove(from);
         files.add(to, item);
         notifyItemMoved(from, to);
-        if (itemMoveListener != null) {
-            itemMoveListener.onItemMoved(from, to);
-        }
         return true;
     }
 
